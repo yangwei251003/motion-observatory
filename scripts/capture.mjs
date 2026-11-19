@@ -1,0 +1,48 @@
+import { mkdir } from 'node:fs/promises'
+import { chromium } from 'playwright'
+
+const url = process.env.OBSERVATORY_URL ?? 'http://127.0.0.1:4239/'
+const out = process.env.OBSERVATORY_IMAGES ?? '.work/screens'
+await mkdir(out, { recursive: true })
+const browser = await chromium.launch({ channel: 'chrome', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
+try {
+  const desk = await browser.newContext({ viewport: { width: 1440, height: 920 }, deviceScaleFactor: 1 })
+  const page = await desk.newPage()
+  await page.goto(url)
+  await page.waitForFunction(() => document.querySelector('[data-renderer="3d"]'))
+  await page.screenshot({ path: out + '/hero.png' })
+  await page.locator('#edition-cards').scrollIntoViewIfNeeded()
+  const card = page.locator('[data-edition="eclipse"]')
+  const bounds = await card.boundingBox()
+  await page.mouse.move(bounds.x + bounds.width - 19, bounds.y + 24)
+  await page.waitForTimeout(500)
+  await page.screenshot({ path: out + '/spotlight.png' })
+  await card.click()
+  await page.locator('.detail-shell').waitFor()
+  await page.waitForTimeout(720)
+  await page.screenshot({ path: out + '/detail.png' })
+  await page.locator('#add-product').click()
+  await page.locator('.added-toast').waitFor()
+  await page.waitForTimeout(440)
+  await page.screenshot({ path: out + '/toast.png' })
+  await page.locator('#detail-bag').click()
+  await page.locator('.layer-drawer').waitFor()
+  await page.waitForTimeout(460)
+  await page.screenshot({ path: out + '/bag.png' })
+  await page.locator('#checkout-start').click()
+  await page.waitForTimeout(995)
+  await page.screenshot({ path: out + '/curtain.png' })
+  await page.locator('.layer-curtain').waitFor({ state: 'hidden' })
+  await page.screenshot({ path: out + '/checkout.png' })
+  await page.goto(url)
+  await page.getByRole('button', { name: '动效索引', exact: true }).click()
+  await page.waitForTimeout(430)
+  await page.screenshot({ path: out + '/index.png' })
+  const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 })
+  const phone = await mobile.newPage()
+  await phone.goto(url)
+  await phone.waitForFunction(() => document.querySelector('[data-renderer="3d"]'))
+  await phone.screenshot({ path: out + '/mobile.png' })
+} finally {
+  await browser.close()
+}
