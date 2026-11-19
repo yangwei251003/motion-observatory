@@ -8,6 +8,8 @@
 | Edge 正式版 | [28/28](../evidence/check-edge.json) |
 | Playwright WebKit | [28/28](../evidence/check-webkit.json) |
 
+公开站点再次完成 [Chrome 28/28](../evidence/published-chrome.json)，核对发布版本后从真实 GitHub Pages 地址操作。线上另按索引顺序逐一进入 26 个效果，确认目标控件进入可见区，无运行错误。
+
 专项包含磁吸中心之外的位移、对角旋转的符号、按键图标中间顶点、动态 Canvas 像素、共享卡片展开与回程的矩形位置、点击波纹的实际起点、滚轮动画、购物袋增删后的坐标与金额、蓝幕与品牌字符错开以及实际路由变化。
 
 [首屏](../evidence/hero.png) · [聚光灯](../evidence/spotlight.png) · [详情](../evidence/detail.png) · [提示](../evidence/toast.png) · [抽屉](../evidence/bag.png) · [结算过场](../evidence/curtain.png) · [术语索引](../evidence/index.png) · [窄屏](../evidence/mobile.png)
